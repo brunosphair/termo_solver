@@ -1,0 +1,3 @@
+Unidecode~=1.3.4
+selenium~=4.3.0
+pyshadow~=0.0.4

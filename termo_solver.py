@@ -4,6 +4,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.chrome.service import Service
 import time
 from pyshadow.main import Shadow
+import random
 
 
 def load_txt():  # Loads the txt from lexico pt-br and put the words with 5 letters in a list
@@ -91,13 +92,12 @@ def web_termo():  # Open Google Chrome Navigator, and starting by a word imputed
             if i == 0:
                 word = input('Qual palavra tentar?').upper()
             else:
-                word = possible_words[k]
+                word = random.choice(possible_words)
             for letter in word.lower():
                 css = '#kbd_' + unidecode(letter)
                 shadow.find_element(css).click()
             shadow.find_element('#kbd_enter').click()
-            time.sleep(3)
-            print(shadow.find_elements('div.letter:nth-child(2)')[i].get_attribute('class'))
+            time.sleep(2)
             if shadow.find_elements('div.letter:nth-child(2)')[i].get_attribute('class') == 'letter empty':
                 print('Palavra inválida')
                 for j in range(5):

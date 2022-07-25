@@ -61,7 +61,7 @@ def all_results_analise(word, all_results):  # Receives the tried word and a lis
             count_wrong = all_letter_results.count('letter wrong')
             if count_right > 0:
                 for j in range(len(all_letter_results)):
-                    if all_letter_results[j] == 'letter wrong' or all_letter_results == 'letter place':
+                    if all_letter_results[j] == 'letter wrong':
                         all_results[letter_positions[j]] = -1
                 if count_wrong >= 1:
                     number_of_letter(letter, count_right)

@@ -4,7 +4,6 @@ from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.chrome.service import Service
 import time
 from pyshadow.main import Shadow
-import random
 
 
 def load_txt():  # Loads the txt from lexico pt-br and put the words with 5 letters in a list
@@ -71,6 +70,44 @@ def all_results_analise(word, all_results):  # Receives the tried word and a lis
     return all_results
 
 
+def word_picker(right_letters):  # Returns the word to be tested. The criteria is: the possible word that has most of
+    # the five more common letters in the possible words
+
+    letter_list = dict()
+    if len(possible_words) == 1:
+        return possible_words[0]
+    else:
+        for word in possible_words:
+            for letter in word:
+                if unidecode(letter) not in letter_list:
+                    letter_list[unidecode(letter)] = 0
+                letter_list[unidecode(letter)] += 1
+
+        for letter in right_letters:
+            if letter in letter_list:
+                del letter_list[letter]
+
+        sorted_letters = sorted(letter_list, key=letter_list.get)
+        #for y in sorted_letters:
+        #    print(y, ':', letter_list[y])
+
+        biggest_count = 0
+        for word in possible_words:
+            count = 0
+            if len(sorted_letters) < 6:
+                final = len(sorted_letters)
+            else:
+                final = 6
+            for y in range(1, final):
+                if sorted_letters[(-1) * y] in unidecode(word):
+                    count += 1
+            if count > biggest_count:
+                the_word = word
+                biggest_count = count
+
+        return the_word
+
+
 def web_termo():  # Open Google Chrome Navigator, and starting by a word imputed by the user, tries to guess the word
     # of the day of term.ooo
     global possible_words
@@ -83,6 +120,7 @@ def web_termo():  # Open Google Chrome Navigator, and starting by a word imputed
     shadow = Shadow(driver)
     place.click()
     k = -1
+    right_letters = set()
 
     for i in range(6):
         while shadow.find_elements('div.letter:nth-child(2)')[i].get_attribute('class') == 'letter empty' or \
@@ -90,9 +128,9 @@ def web_termo():  # Open Google Chrome Navigator, and starting by a word imputed
                 shadow.find_elements('div.letter:nth-child(2)')[i].get_attribute('class') == 'letter edit empty':
             k += 1
             if i == 0:
-                word = input('Qual palavra tentar?').upper()
+                word = 'ACESO'
             else:
-                word = random.choice(possible_words)
+                word = word_picker(right_letters)
             for letter in word.lower():
                 css = '#kbd_' + unidecode(letter)
                 shadow.find_element(css).click()
@@ -100,6 +138,7 @@ def web_termo():  # Open Google Chrome Navigator, and starting by a word imputed
             time.sleep(2)
             if shadow.find_elements('div.letter:nth-child(2)')[i].get_attribute('class') == 'letter empty':
                 print('Palavra inválida')
+                possible_words.remove(word)
                 for j in range(5):
                     shadow.find_element('#kbd_backspace').click()
 
@@ -117,8 +156,10 @@ def web_termo():  # Open Google Chrome Navigator, and starting by a word imputed
                     delete_letter(unidecode(word[n]))
                 elif result == 'letter place':
                     include_letter(unidecode(word[n]), n + 1)
+                    right_letters.add(word[n])
                 elif result == 'letter right':
                     include_letter_pos(unidecode(word[n]), n + 1)
+                    right_letters.add(word[n])
                 elif result == 'letter right done':
                     print('A palavra correta é:', word.upper())
                     input('Pressione Enter para fechar o navegador...')

@@ -10,8 +10,7 @@ def load_txt():  # Loads the txt from lexico pt-br and put the words with 5 lett
     words = []
     with open('palavras.txt', encoding='utf8') as f:
         for item in f:
-            if len(item.rstrip()) == 5:
-                words.append(item.rstrip().upper())
+            words.append(item.rstrip().upper())
 
     return words
 
@@ -70,8 +69,8 @@ def all_results_analise(word, all_results):  # Receives the tried word and a lis
     return all_results
 
 
-def word_picker(right_letters):  # Returns the word to be tested. The criteria is: the possible word that has most of
-    # the five more common letters in the possible words
+def word_picker(right_letters):  # Returns the word to be tested. The criteria is: the word that has most of the more
+    # common letters of the possible words, except the right letters. It is not necessary a possible word
 
     letter_list = dict()
     if len(possible_words) == 1:
@@ -91,16 +90,19 @@ def word_picker(right_letters):  # Returns the word to be tested. The criteria i
         #for y in sorted_letters:
         #    print(y, ':', letter_list[y])
 
+        the_word = possible_words[0]
         biggest_count = 0
-        for word in possible_words:
+        if len(sorted_letters) < 6:
+            final = len(sorted_letters)
+        else:
+            final = 6
+        for word in all_possible_words:
             count = 0
-            if len(sorted_letters) < 6:
-                final = len(sorted_letters)
-            else:
-                final = 6
             for y in range(1, final):
                 if sorted_letters[(-1) * y] in unidecode(word):
                     count += 1
+                if unidecode(word[y - 1]) in right_letters:
+                    count -= 1
             if count > biggest_count:
                 the_word = word
                 biggest_count = count
@@ -108,40 +110,47 @@ def word_picker(right_letters):  # Returns the word to be tested. The criteria i
         return the_word
 
 
+def try_word(word, i, shadow):  # Types the word in the term.ooo site and finds if its a valid word, if not, deletes it
+    # from the pertinents lists
+
+    for letter in word.lower():
+        css = '#kbd_' + unidecode(letter)
+        shadow.find_element(css).click()
+    shadow.find_element('#kbd_enter').click()
+    time.sleep(2)
+    if shadow.find_elements('div.letter:nth-child(2)')[i].get_attribute('class') == 'letter empty':
+        print('Palavra inválida')
+        if word in possible_words:
+            possible_words.remove(word)
+        all_possible_words.remove(word)
+        for j in range(5):
+            shadow.find_element('#kbd_backspace').click()
+
+
 def web_termo():  # Open Google Chrome Navigator, and starting by a word imputed by the user, tries to guess the word
     # of the day of term.ooo
     global possible_words
+    global all_possible_words
 
     possible_words = load_txt()
+    all_possible_words = possible_words.copy()
     ser = Service(ChromeDriverManager().install())
     driver = webdriver.Chrome(service=ser)
     driver.get('https://term.ooo/')
     place = driver.find_element('xpath', '//*[@id="help"]/p[4]')
     shadow = Shadow(driver)
     place.click()
-    k = -1
     right_letters = set()
 
     for i in range(6):
         while shadow.find_elements('div.letter:nth-child(2)')[i].get_attribute('class') == 'letter empty' or \
                 shadow.find_elements('div.letter:nth-child(2)')[i].get_attribute('class') == 'letter empty edit' or \
                 shadow.find_elements('div.letter:nth-child(2)')[i].get_attribute('class') == 'letter edit empty':
-            k += 1
             if i == 0:
                 word = 'ACESO'
             else:
                 word = word_picker(right_letters)
-            for letter in word.lower():
-                css = '#kbd_' + unidecode(letter)
-                shadow.find_element(css).click()
-            shadow.find_element('#kbd_enter').click()
-            time.sleep(2)
-            if shadow.find_elements('div.letter:nth-child(2)')[i].get_attribute('class') == 'letter empty':
-                print('Palavra inválida')
-                possible_words.remove(word)
-                for j in range(5):
-                    shadow.find_element('#kbd_backspace').click()
-
+            try_word(word, i, shadow)
         all_results = []
         for j in range(5):
             all_results.append(
@@ -166,7 +175,6 @@ def web_termo():  # Open Google Chrome Navigator, and starting by a word imputed
                     driver.quit()
                     exit()
         print('Palavras possíveis: ', len(possible_words))
-        x = input('Imprimir palavras possíveis? (s/N) ').upper()
-        if x == 'S':
-            print(possible_words)
-        k = -1
+        #x = input('Imprimir palavras possíveis? (s/N) ').upper()
+        #if x == 'S':
+        #    print(possible_words)

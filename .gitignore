@@ -3,3 +3,11 @@
 /termo_method_tester.py
 /word_tester.py
 /palavras_invalidas.txt
+
+# Byte-compiled / optimized / DLL files
+_pycache_/
+*.py[cod]
+*$py.class
+
+# IDE files
+.idea

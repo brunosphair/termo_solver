@@ -47,15 +47,11 @@ def web_termo(game):  # Open Google Chrome Navigator, and starting by a word imp
 
         right_word = game.classes_analyse(word, classes)
         if right_word:
-            print('A palavra correta é:', right_word.upper())
-            input('Pressione Enter para fechar o navegador...')
+            print('The correct word is:', right_word.upper())
+            input('Press Enter to close the web browser...')
             driver.quit()
             exit()
 
         i += 1
 
     print('The word was not guessed :(')
-
-
-#game = Solver()
-#web_termo(game)

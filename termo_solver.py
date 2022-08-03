@@ -79,7 +79,7 @@ class Solver:
         right_word = None
 
         if classes[0] == 'letter empty':
-            print('Palavra', word.upper(), 'inválida')
+            print('Word', word.upper(), 'invalid')
             if word in self.possible_words:
                 self.possible_words.remove(word)
             self.all_possible_words.remove(word)
@@ -119,14 +119,14 @@ class Solver:
                 elif result == 'letter right done':
                     right_word = word
 
-        print('Palavras possíveis: ', len(self.possible_words))
+        print('Possible Words: ', len(self.possible_words))
 
         return right_word
 
 
 def load_txt():  # Loads the txt from lexico pt-br and put the words with 5 letters in a list
     words = []
-    with open('palavras.txt', encoding='utf8') as f:
+    with open('words.txt', encoding='utf8') as f:
         for item in f:
             words.append(unidecode(item.rstrip().upper()))
 

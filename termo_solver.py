@@ -32,7 +32,7 @@ class Solver:
             if word.count(letter) != occurrences:
                 self.possible_words.remove(word)
 
-    def word_picker(self):  # Returns the word to be tested. The criteria is: the word that has most of the more
+    def word_picker(self, word_len):  # Returns the word to be tested. The criteria is: the word that has most of the more
         # common letters of the possible words, except the right letters. It is not necessary a possible word
 
         letter_list = dict()
@@ -55,10 +55,10 @@ class Solver:
             #    print(y, ':', letter_list[y])
 
             biggest_count = 0
-            if len(sorted_letters) < 6:
+            if len(sorted_letters) < word_len + 1:
                 final = len(sorted_letters)
             else:
-                final = 6
+                final = word_len + 1
             for word in self.all_possible_words:
                 count = 0
                 for y in range(1, final):
@@ -72,7 +72,7 @@ class Solver:
 
             return the_word
 
-    def classes_analyse(self, word, classes):  # Receives the tried word and a list ('classes') that
+    def classes_analyse(self, word, classes, word_len):  # Receives the tried word and a list ('classes') that
         # contains, in order, the class of each letter of the tried word ('letter wrong', 'letter place' or 'letter
         # right'). Based on this, the function returns a list overwriting 'letter wrong' and 'letter place' classes of
         # letters that appear more than once in the word with -1.
@@ -90,7 +90,7 @@ class Solver:
             if word.count(letter) > 1:
                 all_letter_results = []
                 letter_positions = []
-                for j in range(5):
+                for j in range(word_len):
                     if word[j] == letter:
                         all_letter_results.append(classes[j])
                         letter_positions.append(j)
@@ -105,7 +105,7 @@ class Solver:
                 else:
                     self.delete_letter(letter)
 
-        for n in range(5):
+        for n in range(word_len):
             result = classes[n]
             if result != -1:
                 if result == 'letter wrong':

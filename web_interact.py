@@ -32,7 +32,7 @@ def web_termo(game, max_attempts, word_len):  # Open Google Chrome Navigator, an
     driver = webdriver.Chrome(service=ser)
 
     driver.get('https://term.ooo/')
-    place = driver.find_element('xpath', '//*[@id="help"]/p[4]')
+    place = driver.find_element('xpath', '//*[@id="help"]/p[4]') #  Random place to click and close the instructions
     shadow = Shadow(driver)
     place.click()
     i = 0
@@ -48,7 +48,7 @@ def web_termo(game, max_attempts, word_len):  # Open Google Chrome Navigator, an
 
         right_word = game.classes_analyse(word, classes, word_len)
         if right_word:
-            print('In' i + 1, 'attempts, the correct word is:', right_word.upper())
+            print('In', i + 1, 'attempts, the correct word is:', right_word.upper())
             input('Press Enter to close the web browser...')
             driver.quit()
             exit()

@@ -22,7 +22,7 @@ class Web:
         return self.shadow.find_elements(selector)[i].get_attribute('class')
 
     def get_classes(self, word, i, word_len):  # Types the word in the term.ooo site and finds if its a valid word, if
-        # not, deletes it from the pertinents lists
+        # not, erases the typed letters. At the end, returns the classes of the letters elements in the site
 
         for letter in word.lower():
             css = '#kbd_' + unidecode(letter)

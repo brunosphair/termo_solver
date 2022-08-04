@@ -19,7 +19,8 @@ class Solver:
                 self.possible_words.remove(word)
 
     def include_letter(self, letter, letter_not_position):  # Removes from possible words the words that not contains
-        # the specified letter and, after removes the words that contains the specified letter but in the wrong position
+        # the specified letter and, after, removes the words that contains the specified letter but in the wrong
+        # position
         for word in list(self.possible_words):
             if letter not in word:
                 self.possible_words.remove(word)
@@ -51,8 +52,6 @@ class Solver:
                     del letter_list[letter]
 
             sorted_letters = sorted(letter_list, key=letter_list.get)
-            # for y in sorted_letters:
-            #    print(y, ':', letter_list[y])
 
             biggest_count = 0
             if len(sorted_letters) < word_len + 1:
@@ -73,9 +72,11 @@ class Solver:
             return the_word
 
     def classes_analyse(self, word, classes, word_len):  # Receives the tried word and a list ('classes') that
-        # contains, in order, the class of each letter of the tried word ('letter wrong', 'letter place' or 'letter
-        # right'). Based on this, the function returns a list overwriting 'letter wrong' and 'letter place' classes of
-        # letters that appear more than once in the word with -1.
+        # contains, in order, the class of each letter of the tried word ('letter wrong', 'letter place', 'letter
+        # right' or 'letter empty'). Based on this, the function returns a list overwriting 'letter wrong' classes of
+        # letters that appear more than once in the word with -1. Than, based on classes, removes the words that are no
+        # longer possible to be the word of the day. At the end, returns None if the word was not guesses or the guessed
+        # word
         right_word = None
 
         if classes[0] == 'letter empty':
@@ -124,7 +125,8 @@ class Solver:
         return right_word
 
 
-def load_txt():  # Loads the txt from lexico pt-br and put the words with 5 letters in a list
+def load_txt():  # Loads the words.txt, based on lexico pt-br and put the words in a list. The file contains only words
+    # with 5 letter, and each one is a valid word in term.ooo, tested one by one
     words = []
     with open('words.txt', encoding='utf8') as f:
         for item in f:

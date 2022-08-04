@@ -32,8 +32,8 @@ class Solver:
             if word.count(letter) != occurrences:
                 self.possible_words.remove(word)
 
-    def word_picker(self, word_len):  # Returns the word to be tested. The criteria is: the word that has most of the more
-        # common letters of the possible words, except the right letters. It is not necessary a possible word
+    def word_picker(self, word_len):  # Returns the word to be tested. The criteria is: the word that has most of the
+        # more common letters of the possible words, except the right letters. It is not necessary a possible word
 
         letter_list = dict()
         the_word = self.possible_words[0]

@@ -6,53 +6,64 @@ from pyshadow.main import Shadow
 import time
 
 
-def get_classes(word, i, shadow, word_len):  # Types the word in the term.ooo site and finds if its a valid word, if not, deletes
-    # it from the pertinents lists
+class Web:
+    def __init__(self):
+        ser = Service(ChromeDriverManager().install())
+        self.driver = webdriver.Chrome(service=ser)
+        self.shadow = Shadow(self.driver)
 
-    for letter in word.lower():
-        css = '#kbd_' + unidecode(letter)
-        shadow.find_element(css).click()
-    shadow.find_element('#kbd_enter').click()
-    time.sleep(2)
-    if shadow.find_elements('div.letter:nth-child(2)')[i].get_attribute('class') == 'letter empty':
+    def termo(self):
+        self.driver.get('https://term.ooo/')
+        # Random place to click and close the site instructions
+        place = self.driver.find_element('xpath', '//*[@id="help"]/p[4]')
+        place.click()
+
+    def class_by_attribute(self, selector, i):
+        return self.shadow.find_elements(selector)[i].get_attribute('class')
+
+    def get_classes(self, word, i, word_len):  # Types the word in the term.ooo site and finds if its a valid word, if
+        # not, deletes it from the pertinents lists
+
+        for letter in word.lower():
+            css = '#kbd_' + unidecode(letter)
+            self.shadow.find_element(css).click()
+        self.shadow.find_element('#kbd_enter').click()
+        time.sleep(2)
+        if self.class_by_attribute('div.letter:nth-child(2)', i) == 'letter empty':
+            for j in range(word_len):
+                self.shadow.find_element('#kbd_backspace').click()
+        classes = []
         for j in range(word_len):
-            shadow.find_element('#kbd_backspace').click()
-    classes = []
-    for j in range(word_len):
-        classes.append(
-            shadow.find_elements('div.letter:nth-child(' + str(j + 2) + ')')[i].get_attribute('class'))
+            classes.append(
+                self.class_by_attribute(f'div.letter:nth-child({str(j + 2)})', i))
 
-    return classes
+        return classes
 
 
-def web_termo(game, max_attempts, word_len):  # Open Google Chrome Navigator, and starting by a word imputed by the user, tries to guess the
-    # word of the day of term.ooo
+def play_termo(game, max_attempts, word_len):  # Open Google Chrome Navigator, and starting by a word imputed by the
+    # user, tries to guess the word of the day of term.ooo
 
-    ser = Service(ChromeDriverManager().install())
-    driver = webdriver.Chrome(service=ser)
+    web = Web()
+    web.termo()
 
-    driver.get('https://term.ooo/')
-    place = driver.find_element('xpath', '//*[@id="help"]/p[4]') #  Random place to click and close the instructions
-    shadow = Shadow(driver)
-    place.click()
-    i = 0
     right_word = None
+    attempt = 0
+    first_letter_selector = 'div.letter:nth-child(2)'
 
-    while i <= max_attempts - 1 and not right_word:
-        while shadow.find_elements('div.letter:nth-child(2)')[i].get_attribute('class') == 'letter empty' or \
-                shadow.find_elements('div.letter:nth-child(2)')[i].get_attribute('class') == 'letter empty edit' or \
-                shadow.find_elements('div.letter:nth-child(2)')[i].get_attribute('class') == 'letter edit empty':
+    while attempt <= max_attempts - 1 and not right_word:
+        while web.class_by_attribute(first_letter_selector, attempt) == 'letter empty' or \
+                web.class_by_attribute(first_letter_selector, attempt) == 'letter empty edit' or \
+                web.class_by_attribute(first_letter_selector, attempt) == 'letter edit empty':
             word = game.word_picker(word_len)
-            classes = get_classes(word, i, shadow, word_len)
-
+            classes = web.get_classes(word, attempt, word_len)
 
         right_word = game.classes_analyse(word, classes, word_len)
         if right_word:
-            print('In', i + 1, 'attempts, the correct word is:', right_word.upper())
+            print('In', attempt + 1, 'attempts, the correct word is:', right_word.upper())
             input('Press Enter to close the web browser...')
-            driver.quit()
+            web.driver.quit()
             exit()
 
-        i += 1
+        attempt += 1
 
     print('The word was not guessed :(')

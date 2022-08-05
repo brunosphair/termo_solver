@@ -75,5 +75,5 @@ if __name__ == '__main__':
     print(end_time - start_time)
     print(f'Max = {max} and Media = {media}')
     words_not_guessed = sum(1 if n > 6 else 0 for n in n_attempts)
-    percent_not_guessed = words_not_guessed/100
+    percent_not_guessed = words_not_guessed/len(words)
     print(f'The method not guessed {percent_not_guessed * 100}% of the words')

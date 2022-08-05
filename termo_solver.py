@@ -71,7 +71,7 @@ class Solver:
 
             return the_word
 
-    def classes_analyse(self, word, classes, word_len):  # Receives the tried word and a list ('classes') that
+    def classes_analyse(self, word, classes, word_len, print_status=True):  # Receives the tried word and a list ('classes') that
         # contains, in order, the class of each letter of the tried word ('letter wrong', 'letter place', 'letter
         # right' or 'letter empty'). Based on this, the function returns a list overwriting 'letter wrong' classes of
         # letters that appear more than once in the word with -1. Than, based on classes, removes the words that are no
@@ -120,7 +120,8 @@ class Solver:
                 elif result == 'letter right done':
                     right_word = word
 
-        print('Possible Words: ', len(self.possible_words))
+        if print_status:
+            print('Possible Words: ', len(self.possible_words))
 
         return right_word
 

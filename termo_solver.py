@@ -71,12 +71,12 @@ class Solver:
 
             return the_word
 
-    def classes_analyse(self, word, classes, word_len, print_status=True):  # Receives the tried word and a list ('classes') that
-        # contains, in order, the class of each letter of the tried word ('letter wrong', 'letter place', 'letter
-        # right' or 'letter empty'). Based on this, the function returns a list overwriting 'letter wrong' classes of
-        # letters that appear more than once in the word with -1. Than, based on classes, removes the words that are no
-        # longer possible to be the word of the day. At the end, returns None if the word was not guesses or the guessed
-        # word
+    def classes_analyse(self, word, classes, word_len, print_status=True, print_possible_words=False):
+        """Receives the tried word and a list ('classes') that contains, in order, the class of each letter of the tried
+         word ('letter wrong', 'letter place', 'letter right' or 'letter empty'). Based on this, the function returns a
+         list overwriting 'letter wrong' classes of letters that appear more than once in the word with -1. Than, based
+         on classes, removes the words that are no longer possible to be the word of the day. At the end, returns None
+         if the word was not guesses or the guessed word"""
         right_word = None
 
         if classes[0] == 'letter empty':
@@ -122,6 +122,8 @@ class Solver:
 
         if print_status:
             print('Possible Words: ', len(self.possible_words))
+        if print_possible_words:
+            print(self.possible_words)
 
         return right_word
 

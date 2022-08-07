@@ -34,8 +34,7 @@ class Web:
                 self.shadow.find_element('#kbd_backspace').click()
         classes = []
         for j in range(word_len):
-            classes.append(
-                self.class_by_attribute(f'div.letter:nth-child({str(j + 2)})', i))
+            classes.append(self.class_by_attribute(f'div.letter:nth-child({str(j + 2)})', i))
 
         return classes
 

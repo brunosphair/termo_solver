@@ -95,7 +95,7 @@ def play_test(definition=None):
 if __name__ == '__main__':
     start_time = datetime.datetime.now()
 
-    n_attempts = play_test("ABOBO")
+    n_attempts = play_test()
     if isinstance(n_attempts, int):
         print(f'Word guessed in {n_attempts} attempts')
     else:

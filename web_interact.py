@@ -39,6 +39,15 @@ class Web:
 
         return classes
 
+    def invalid_word(self, attempt):
+
+        first_letter_selector = 'div.letter:nth-child(2)'
+        invalid_classes = ['letter empty', 'letter empty edit', 'letter edit empty']
+
+        is_invalid = self.class_by_attribute(first_letter_selector, attempt) in invalid_classes
+
+        return is_invalid
+
 
 def play_termo(game, max_attempts, word_len):  # Open Google Chrome Navigator, and starting by a word imputed by the
     # user, tries to guess the word of the day of term.ooo
@@ -48,12 +57,9 @@ def play_termo(game, max_attempts, word_len):  # Open Google Chrome Navigator, a
 
     right_word = None
     attempt = 0
-    first_letter_selector = 'div.letter:nth-child(2)'
 
     while attempt <= max_attempts - 1 and not right_word:
-        while web.class_by_attribute(first_letter_selector, attempt) == 'letter empty' or \
-                web.class_by_attribute(first_letter_selector, attempt) == 'letter empty edit' or \
-                web.class_by_attribute(first_letter_selector, attempt) == 'letter edit empty':
+        while web.invalid_word(attempt):
             word = game.word_picker(word_len)
             classes = web.get_classes(word, attempt, word_len)
 

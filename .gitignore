@@ -3,6 +3,7 @@
 /termo_method_tester.py
 /word_tester.py
 /palavras_invalidas.txt
+venv/
 
 # Byte-compiled / optimized / DLL files
 _pycache_/

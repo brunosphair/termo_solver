@@ -36,6 +36,8 @@ class Solver:
     def word_picker(self, word_len):  # Returns the word to be tested. The criteria is: the word that has most of the
         # more common letters of the possible words, except the right letters. It is not necessary a possible word
 
+        # TODO: implement a solution to words with repeated letters
+
         letter_list = dict()
         the_word = self.possible_words[0]
         if len(self.possible_words) == 1:

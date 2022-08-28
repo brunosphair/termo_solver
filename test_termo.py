@@ -6,13 +6,13 @@ import datetime
 def get_classes_offline(word, right_word, word_len):
     all_results = []
 
-    for letter_position in range(word_len):
-        if word == right_word:
-            all_results = ['letter right done', 'letter right done', 'letter right done', 'letter right done',
-                           'letter right done']
-            return all_results
+    if word == right_word:
+        all_results = ['letter right done', 'letter right done', 'letter right done', 'letter right done',
+                        'letter right done']
+        return all_results
 
-        elif word[letter_position] == right_word[letter_position]:
+    for letter_position in range(word_len):
+        if word[letter_position] == right_word[letter_position]:
             all_results.append('letter right')
 
         elif word[letter_position] in right_word:
@@ -24,11 +24,10 @@ def get_classes_offline(word, right_word, word_len):
                         indices.append(i)
                 for i in indices:
                     if i < letter_position:
-                        if all_results[i] == 'letter right' or all_results == 'letter place':
+                        if all_results[i] == 'letter right' or all_results[i] == 'letter place':
                             occurrences -= 1
-                        else:
-                            if word[i] == right_word[i]:
-                                occurrences -= 1
+                    elif word[i] == right_word[i]:
+                        occurrences -= 1
                 if occurrences > 0:
                     all_results.append('letter place')
                 else:
@@ -95,7 +94,7 @@ def play_test(definition=None):
 if __name__ == '__main__':
     start_time = datetime.datetime.now()
 
-    n_attempts = play_test()
+    n_attempts = play_test('ABOBO')
     if isinstance(n_attempts, int):
         print(f'Word guessed in {n_attempts} attempts')
     else:

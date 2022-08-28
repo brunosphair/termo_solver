@@ -33,6 +33,11 @@ class Solver:
             if word.count(letter) != occurrences:
                 self.possible_words.remove(word)
 
+    def minimum_number_of_letter(self, letter, occurrences):
+        for word in list(self.possible_words):
+            if word.count(letter) < occurrences:
+                self.possible_words.remove(word)
+
     def word_picker(self, word_len):  # Returns the word to be tested. The criteria is: the word that has most of the
         # more common letters of the possible words, except the right letters. It is not necessary a possible word
 
@@ -105,6 +110,8 @@ class Solver:
                             classes[letter_positions[j]] = -1
                     if count_wrong >= 1:
                         self.number_of_letter(letter, count_right)
+                    elif count_right > 1:
+                        self.minimum_number_of_letter(letter, count_right)
                 else:
                     self.delete_letter(letter)
 

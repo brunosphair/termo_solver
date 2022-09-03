@@ -5,7 +5,8 @@ class Solver:
     def __init__(self):
         self.possible_words = load_txt()
         self.all_possible_words = self.possible_words.copy()
-        self.right_letters = set()
+        self.right_letters = dict()
+        self.wrong_places = dict()
 
     def delete_letter(self, letter):  # Removes from possible words the words that contain the specified letter
         for word in list(self.possible_words):
@@ -45,18 +46,24 @@ class Solver:
 
         letter_list = dict()
         the_word = self.possible_words[0]
-        if len(self.possible_words) == 1:
+        if len(self.possible_words) <= 2:
             return the_word
         else:
             for word in self.possible_words:
-                for letter in word:
+                for letter_position in range(len(word)):
+                    letter = word[letter_position]
                     if letter not in letter_list:
-                        letter_list[letter] = 0
-                    letter_list[letter] += 1
+                        if letter in self.right_letters:
+                            if letter_position not in self.right_letters[letter]:
+                                letter_list[letter] = 0
+                        else:
+                            letter_list[letter] = 0
+                    else:
+                        letter_list[letter] += 1
 
-            for letter in self.right_letters:
-                if letter in letter_list:
-                    del letter_list[letter]
+            #for letter in self.right_letters:
+            #    if letter in letter_list:
+            #        del letter_list[letter]
 
             sorted_letters = sorted(letter_list, key=letter_list.get)
 
@@ -67,11 +74,24 @@ class Solver:
                 final = word_len + 1
             for word in self.all_possible_words:
                 count = 0
-                for y in range(1, final):
-                    if sorted_letters[(-1) * y] in word:
-                        count += 1
-                    if word[y - 1] in self.right_letters:
-                        count -= 1
+                for y in range(word_len):
+                    if word[y] not in word[:y]:
+                        if word[y] in sorted_letters[(-1) * final:]:
+                            if word[y] in self.right_letters:
+                                if y not in self.right_letters[word[y]]:
+                                    if word[y] in self.wrong_places:
+                                        if y not in self.wrong_places[word[y]]:
+                                            count += 1
+                                            if y not in self.right_letters.values():
+                                                count += 0
+                                    else:
+                                        count += 1
+                            else:
+                                count += 1
+                    #if sorted_letters[(-1) * y] in word:
+                    #    count += 1
+                    #if word[y - 1] in self.right_letters:
+                    #    count -= 1
                 if count > biggest_count:
                     the_word = word
                     biggest_count = count
@@ -122,10 +142,15 @@ class Solver:
                     self.delete_letter(word[n])
                 elif result == 'letter place':
                     self.include_letter(word[n], n + 1)
-                    self.right_letters.add(word[n])
+                    if word[n] not in self.wrong_places:
+                        self.wrong_places[word[n]] = set()
+                    self.wrong_places[word[n]].add(n)
+                    #self.right_letters.add(word[n])
                 elif result == 'letter right':
                     self.include_letter_pos(word[n], n + 1)
-                    self.right_letters.add(word[n])
+                    if word[n] not in self.right_letters:
+                        self.right_letters[word[n]] = set()
+                    self.right_letters[word[n]].add(n)
                 elif result == 'letter right done':
                     right_word = word
 

@@ -7,34 +7,40 @@ class Solver:
         self.all_possible_words = self.possible_words.copy()
         self.right_letters = set()
 
-    def delete_letter(self, letter):  # Removes from possible words the words that contain the specified letter
+    def delete_letter(self, letter):  # Removes from possible words the words
+        # that contain the specified letter'''
         for word in list(self.possible_words):
             if letter in word:
                 self.possible_words.remove(word)
 
-    def include_letter_pos(self, letter, letter_position):  # Removes from possible words the words that not contain the
-        # specified letter in the specified position
+    def include_letter_pos(self, letter, letter_position):  # Removes from
+        # possible words the words that not contain the specified letter in the
+        # specified position
         for word in list(self.possible_words):
             if word[letter_position - 1] != letter:
                 self.possible_words.remove(word)
 
-    def include_letter(self, letter, letter_not_position):  # Removes from possible words the words that not contains
-        # the specified letter and, after, removes the words that contains the specified letter but in the wrong
-        # position
+    def include_letter(self, letter, letter_not_position):  # Removes from
+        # possible words the words that not contains the specified letter and,
+        # after, removes the words that contains the specified letter but in
+        # the wrong position
         for word in list(self.possible_words):
             if letter not in word:
                 self.possible_words.remove(word)
             if word[letter_not_position - 1] == letter:
                 self.possible_words.remove(word)
 
-    def number_of_letter(self, letter, occurrences):  # Removes from possible words the words that not contains the
-        # right number of occurrences of the specified letter
+    def number_of_letter(self, letter, occurrences):  # Removes from possible
+        # words the words that not contains the right number of occurrences of
+        # the specified letter
         for word in list(self.possible_words):
             if word.count(letter) != occurrences:
                 self.possible_words.remove(word)
 
-    def word_picker(self, word_len):  # Returns the word to be tested. The criteria is: the word that has most of the
-        # more common letters of the possible words, except the right letters. It is not necessary a possible word
+    def word_picker(self, word_len):  # Returns the word to be tested. The
+        # criteria is: the word that has most of the more common letters of the
+        # possible words, except the right letters. It is not necessary a
+        # possible word
 
         # TODO: implement a solution to words with repeated letters
 
@@ -73,12 +79,22 @@ class Solver:
 
             return the_word
 
-    def classes_analyse(self, word, classes, word_len, print_status=True, print_possible_words=False):
-        """Receives the tried word and a list ('classes') that contains, in order, the class of each letter of the tried
-         word ('letter wrong', 'letter place', 'letter right' or 'letter empty'). Based on this, the function returns a
-         list overwriting 'letter wrong' classes of letters that appear more than once in the word with -1. Than, based
-         on classes, removes the words that are no longer possible to be the word of the day. At the end, returns None
-         if the word was not guesses or the guessed word"""
+    def classes_analysis(
+                        self,
+                        word: str,
+                        classes: list,
+                        word_len: int,
+                        print_status=True,
+                        print_possible_words=False
+                        ):
+        """Receives the tried word and a list ('classes') that contains, in
+        order, the class of each letter of the tried word ('letter wrong',
+        'letter place', 'letter right' or 'letter empty'). Based on this, the
+        function returns a list overwriting 'letter wrong' classes of letters
+        that appear more than once in the word with -1. Than, based
+        on classes, removes the words that are no longer possible to be the
+        word of the day. At the end, returns None
+        if the word was not guesses or the guessed word"""
         right_word = None
 
         if classes[0] == 'letter empty':
@@ -97,7 +113,8 @@ class Solver:
                     if word[j] == letter:
                         all_letter_results.append(classes[j])
                         letter_positions.append(j)
-                count_right = all_letter_results.count('letter place') + all_letter_results.count('letter right')
+                count_right = all_letter_results.count('letter place')
+                + all_letter_results.count('letter right')
                 count_wrong = all_letter_results.count('letter wrong')
                 if count_right > 0:
                     for j in range(len(all_letter_results)):
@@ -130,8 +147,9 @@ class Solver:
         return right_word
 
 
-def load_txt():  # Loads the words.txt, based on lexico pt-br and put the words in a list. The file contains only words
-    # with 5 letter, and each one is a valid word in term.ooo, tested one by one
+def load_txt():  # Loads the words.txt, based on lexico pt-br and put the words
+    # in a list. The file contains only words with 5 letter, and each one is a
+    # valid word in term.ooo, tested one by one
     words = []
     with open('words.txt', encoding='utf8') as f:
         for item in f:

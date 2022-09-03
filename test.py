@@ -8,7 +8,7 @@ class TestTermo(unittest.TestCase):
     def test_word_guess(self):
         word = random.choice(load_txt())
         n_attempts = play_test(word)
-        self.assertIsInstance(n_attempts,int)
+        self.assertIsInstance(n_attempts, int)
 
 
 def get_classes_offline(word, right_word, word_len):
@@ -16,7 +16,8 @@ def get_classes_offline(word, right_word, word_len):
 
     for letter_position in range(word_len):
         if word == right_word:
-            all_results = ['letter right done', 'letter right done', 'letter right done', 'letter right done',
+            all_results = ['letter right done', 'letter right done',
+                           'letter right done', 'letter right done',
                            'letter right done']
             return all_results
 
@@ -28,11 +29,13 @@ def get_classes_offline(word, right_word, word_len):
                 indices = []
                 occurrences = right_word.count(word[letter_position])
                 for i in range(word_len):
-                    if word[i] == word[letter_position] and i != letter_position:
+                    if word[i] == word[letter_position] and \
+                                  i != letter_position:
                         indices.append(i)
                 for i in indices:
                     if i < letter_position:
-                        if all_results[i] == 'letter right' or all_results == 'letter place':
+                        if all_results[i] == 'letter right' or \
+                           all_results == 'letter place':
                             occurrences -= 1
                         else:
                             if word[i] == right_word[i]:
@@ -49,7 +52,8 @@ def get_classes_offline(word, right_word, word_len):
     return all_results
 
 
-def test_termo(game, target_word, print_words=False, print_possible_words=False):
+def test_termo(game, target_word, print_words=False,
+               print_possible_words=False):
     right_word = None
     attempt = 0
     print_status = False
@@ -60,9 +64,11 @@ def test_termo(game, target_word, print_words=False, print_possible_words=False)
             print(word)
         classes = get_classes_offline(word, target_word, len(target_word))
 
-        right_word = game.classes_analyse(word, classes, len(target_word), print_status, print_possible_words)
+        right_word = game.classes_analysis(word, classes, len(target_word),
+                                           print_status, print_possible_words)
         if right_word:
-            print('In', attempt + 1, 'attempts, the correct word is:', right_word.upper())
+            print('In', attempt + 1, 'attempts, the correct word is:',
+                  right_word.upper())
 
         attempt += 1
 
@@ -85,17 +91,19 @@ def play_test(definition=None, print_words=False, print_possible_words=False):
         for w in words:
             game = Solver()
             target_word = w
-            n_attempts.append(test_termo(game, target_word, print_words, print_possible_words))
+            n_attempts.append(test_termo(game, target_word, print_words,
+                                         print_possible_words))
     elif is_integer:
         n_attempts = []
         for i in range(number_of_words):
             game = Solver()
-            n_attempts.append(test_termo(game, words[i], print_words, print_possible_words))
+            n_attempts.append(test_termo(game, words[i], print_words,
+                                         print_possible_words))
     else:
         game = Solver()
-        int_n_attempts = test_termo(game, definition, print_words, print_possible_words)
+        int_n_attempts = test_termo(game, definition, print_words,
+                                    print_possible_words)
         return int_n_attempts
-
 
     return n_attempts
 

@@ -1,6 +1,14 @@
 from termo_solver import Solver
 from termo_solver import load_txt
-import datetime
+import unittest
+import random
+
+
+class TestTermo(unittest.TestCase):
+    def test_word_guess(self):
+        word = random.choice(load_txt())
+        n_attempts = play_test(word)
+        self.assertIsInstance(n_attempts,int)
 
 
 def get_classes_offline(word, right_word, word_len):
@@ -61,7 +69,7 @@ def test_termo(game, target_word, print_words=False, print_possible_words=False)
     return attempt
 
 
-def play_test(definition=None):
+def play_test(definition=None, print_words=False, print_possible_words=False):
     if not definition:
         all_words = True
     else:
@@ -77,15 +85,15 @@ def play_test(definition=None):
         for w in words:
             game = Solver()
             target_word = w
-            n_attempts.append(test_termo(game, target_word))
+            n_attempts.append(test_termo(game, target_word, print_words, print_possible_words))
     elif is_integer:
         n_attempts = []
         for i in range(number_of_words):
             game = Solver()
-            n_attempts.append(test_termo(game, words[i]))
+            n_attempts.append(test_termo(game, words[i], print_words, print_possible_words))
     else:
         game = Solver()
-        int_n_attempts = test_termo(game, definition, True, True)
+        int_n_attempts = test_termo(game, definition, print_words, print_possible_words)
         return int_n_attempts
 
 
@@ -93,18 +101,4 @@ def play_test(definition=None):
 
 
 if __name__ == '__main__':
-    start_time = datetime.datetime.now()
-
-    n_attempts = play_test()
-    if isinstance(n_attempts, int):
-        print(f'Word guessed in {n_attempts} attempts')
-    else:
-        media = sum(n_attempts) / len(n_attempts)
-        max = max(n_attempts, key=int)
-        print(f'Max = {max} and Media = {media}')
-        words_not_guessed = sum(1 if n > 6 else 0 for n in n_attempts)
-        percent_not_guessed = words_not_guessed / len(n_attempts)
-        print(f'The method not guessed {percent_not_guessed * 100}% of the words')
-
-    end_time = datetime.datetime.now()
-    print('Elapsed time:', end_time - start_time)
+    unittest.main()

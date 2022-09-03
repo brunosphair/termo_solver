@@ -4,6 +4,7 @@
 /word_tester.py
 /palavras_invalidas.txt
 venv/
+/test_termo.py
 
 # Byte-compiled / optimized / DLL files
 _pycache_/

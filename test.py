@@ -1,6 +1,14 @@
 from termo_solver import Solver
 from termo_solver import load_txt
-import datetime
+import unittest
+import random
+
+
+class TestTermo(unittest.TestCase):
+    def test_word_guess(self):
+        word = random.choice(load_txt())
+        n_attempts = play_test(word)
+        self.assertIsInstance(n_attempts, int)
 
 
 def get_classes_offline(word, right_word, word_len):
@@ -8,7 +16,8 @@ def get_classes_offline(word, right_word, word_len):
 
     for letter_position in range(word_len):
         if word == right_word:
-            all_results = ['letter right done', 'letter right done', 'letter right done', 'letter right done',
+            all_results = ['letter right done', 'letter right done',
+                           'letter right done', 'letter right done',
                            'letter right done']
             return all_results
 
@@ -20,11 +29,13 @@ def get_classes_offline(word, right_word, word_len):
                 indices = []
                 occurrences = right_word.count(word[letter_position])
                 for i in range(word_len):
-                    if word[i] == word[letter_position] and i != letter_position:
+                    if word[i] == word[letter_position] and \
+                                  i != letter_position:
                         indices.append(i)
                 for i in indices:
                     if i < letter_position:
-                        if all_results[i] == 'letter right' or all_results == 'letter place':
+                        if all_results[i] == 'letter right' or \
+                           all_results == 'letter place':
                             occurrences -= 1
                         else:
                             if word[i] == right_word[i]:
@@ -41,7 +52,8 @@ def get_classes_offline(word, right_word, word_len):
     return all_results
 
 
-def test_termo(game, target_word, print_words=False, print_possible_words=False):
+def test_termo(game, target_word, print_words=False,
+               print_possible_words=False):
     right_word = None
     attempt = 0
     print_status = False
@@ -52,16 +64,18 @@ def test_termo(game, target_word, print_words=False, print_possible_words=False)
             print(word)
         classes = get_classes_offline(word, target_word, len(target_word))
 
-        right_word = game.classes_analyse(word, classes, len(target_word), print_status, print_possible_words)
+        right_word = game.classes_analysis(word, classes, len(target_word),
+                                           print_status, print_possible_words)
         if right_word:
-            print('In', attempt + 1, 'attempts, the correct word is:', right_word.upper())
+            print('In', attempt + 1, 'attempts, the correct word is:',
+                  right_word.upper())
 
         attempt += 1
 
     return attempt
 
 
-def play_test(definition=None):
+def play_test(definition=None, print_words=False, print_possible_words=False):
     if not definition:
         all_words = True
     else:
@@ -77,34 +91,22 @@ def play_test(definition=None):
         for w in words:
             game = Solver()
             target_word = w
-            n_attempts.append(test_termo(game, target_word))
+            n_attempts.append(test_termo(game, target_word, print_words,
+                                         print_possible_words))
     elif is_integer:
         n_attempts = []
         for i in range(number_of_words):
             game = Solver()
-            n_attempts.append(test_termo(game, words[i]))
+            n_attempts.append(test_termo(game, words[i], print_words,
+                                         print_possible_words))
     else:
         game = Solver()
-        int_n_attempts = test_termo(game, definition, True, True)
+        int_n_attempts = test_termo(game, definition, print_words,
+                                    print_possible_words)
         return int_n_attempts
-
 
     return n_attempts
 
 
 if __name__ == '__main__':
-    start_time = datetime.datetime.now()
-
-    n_attempts = play_test()
-    if isinstance(n_attempts, int):
-        print(f'Word guessed in {n_attempts} attempts')
-    else:
-        media = sum(n_attempts) / len(n_attempts)
-        max = max(n_attempts, key=int)
-        print(f'Max = {max} and Media = {media}')
-        words_not_guessed = sum(1 if n > 6 else 0 for n in n_attempts)
-        percent_not_guessed = words_not_guessed / len(n_attempts)
-        print(f'The method not guessed {percent_not_guessed * 100}% of the words')
-
-    end_time = datetime.datetime.now()
-    print('Elapsed time:', end_time - start_time)
+    unittest.main()

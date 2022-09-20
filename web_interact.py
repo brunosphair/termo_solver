@@ -21,9 +21,12 @@ class Web:
     def class_by_attribute(self, selector, i):
         return self.shadow.find_elements(selector)[i].get_attribute('class')
 
-    def get_classes(self, word, i, word_len):  # Types the word in the term.ooo
-        # site and finds if its a valid word, if not, erases the typed letters.
-        # At the end, returns the classes of the letters elements in the site
+    def get_classes(self, word, i, word_len):
+        '''
+        Types the word in the term.ooo site and finds if its a valid word, if
+        not, erases the typed letters. At the end, returns the classes of the
+        letters elements in the site.
+        '''
 
         for letter in word.lower():
             css = '#kbd_' + unidecode(letter)
@@ -53,9 +56,11 @@ class Web:
         return is_invalid
 
 
-def play_termo(game, max_attempts, word_len):  # Open Google Chrome Navigator,
-    # and starting by a word imputed by the user, tries to guess the word of
-    # the day of term.ooo
+def play_termo(game, max_attempts, word_len):
+    '''
+    Open Google Chrome Navigator, and starting by a word imputed by the user,
+    tries to guess the word of the day of term.ooo.
+    '''
 
     web = Web()
     web.termo()

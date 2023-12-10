@@ -1,15 +1,13 @@
 from unidecode import unidecode
 from selenium import webdriver
 from webdriver_manager.chrome import ChromeDriverManager
-from selenium.webdriver.chrome.service import Service
 from pyshadow.main import Shadow
 import time
 
 
 class Web:
     def __init__(self):
-        ser = Service(ChromeDriverManager().install())
-        self.driver = webdriver.Chrome(service=ser)
+        self.driver = webdriver.Chrome(ChromeDriverManager().install())
         self.shadow = Shadow(self.driver)
 
     def termo(self):

@@ -7,7 +7,7 @@ import time
 
 class Web:
     def __init__(self):
-        self.driver = webdriver.Chrome(ChromeDriverManager().install())
+        self.driver = webdriver.Chrome()
         self.shadow = Shadow(self.driver)
 
     def termo(self):
